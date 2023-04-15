@@ -32,13 +32,17 @@ auto read_content_from_file(const std::string &path_to_template) -> std::string
     return buffer.str();
 }
 
-auto write_content_from_file_to_Cmake(const std::string &file_name) -> void
+auto read_content_Cmake()
 {
     std::ifstream cmake_file("CMakeLists.txt");
-    std::string cmake_content((std::istreambuf_iterator<char>(cmake_file)),
-                              (std::istreambuf_iterator<char>()));
+    std::string cmake_content(std::istreambuf_iterator<char>{cmake_file}, std::istreambuf_iterator<char>{});
     cmake_file.close();
+    return cmake_content;
+}
 
+auto write_content_from_file_to_Cmake(const std::string &file_name) -> void
+{
+    auto cmake_content = read_content_Cmake();
     std::ofstream cmake_file_out("CMakeLists.txt");
     if (cmake_file_out.is_open())
     {
@@ -71,8 +75,8 @@ int main()
     std::cout << "Enter file name: ";
     std::cin >> file_name;
 
-    std::string path_to_problems = "problems/" + file_name + ".cpp";
-    std::string path_to_headers = "include/" + file_name + ".hpp";
+    auto path_to_problems = "problems/" + file_name + ".cpp";
+    auto path_to_headers = "include/" + file_name + ".hpp";
     auto path_to_tests = "uts/" + file_name + "_tests.cpp";
 
     if (is_exist(path_to_problems, path_to_headers, path_to_tests))
